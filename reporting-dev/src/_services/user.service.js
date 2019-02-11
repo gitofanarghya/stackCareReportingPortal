@@ -11,6 +11,8 @@ export const userService = {
     getReports
 };
 
+const hostName = window.location.hostname+':8888';
+
 function login(username, password) {
     const requestOptions = {
         method: "POST",
@@ -102,7 +104,7 @@ function getReportTypes(id) {
     };
 
     //return fetch(`https://care-api-prod.appspot.com/units?community_id=${id}`, requestOptions)
-    return fetch(`http://localhost:8888/getReportTypes`, requestOptions)
+    return fetch(`http://${hostName}/getReportTypes`, requestOptions)
         .then(handleResponse)
     
 }
@@ -135,7 +137,7 @@ function getReports(reportType, communityID) {
     };
 
     //return fetch(`https://care-api-prod.appspot.com/users`, requestOptions)
-    return fetch(`http://localhost:8888/getReports`, requestOptions)
+    return fetch(`http://${hostName}/getReports`, requestOptions)
         .then(handleResponse)
     
 }
