@@ -7,7 +7,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListIcon from '@material-ui/icons/List';
-import GroupIcon from '@material-ui/icons/Group';
+import SettingsIcon from '@material-ui/icons/Settings';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -25,13 +25,9 @@ class MenuList extends React.Component {
               <ListItemIcon style={{color: 'inherit'}}><ListIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Reports'/>
             </ListItem> }
-            { adminRole !== undefined && <ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF'} : null}>
-              <ListItemIcon style={{color: 'inherit'}}><GroupIcon /></ListItemIcon>
-              <ListItemText disableTypography style={{color: 'inherit'}} primary='Community Settings' />
-            </ListItem> }
             <ListItem button onClick={() => setPage(3)} style={currentPage === 3 ? {color: '#1ADCFF'} : null}>
-              <ListItemIcon style={{color: 'inherit'}}><AccountCircleIcon /></ListItemIcon>
-              <ListItemText disableTypography style={{color: 'inherit'}} primary='My Account' />
+              <ListItemIcon style={{color: 'inherit'}}><SettingsIcon /></ListItemIcon>
+              <ListItemText disableTypography style={{color: 'inherit'}} primary='Settings' />
             </ListItem>
             <ListItem button onClick={() => setPage(4)} style={currentPage === 4 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><ContactPhoneIcon /></ListItemIcon>

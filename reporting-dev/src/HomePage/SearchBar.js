@@ -9,12 +9,20 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { userActions } from '../_actions';
-import { Input, InputBase } from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
+
+
+const BootstrapInput = withStyles(theme => ({
+  input: {
+    fontWeight: 'bold',
+    color: 'white'
+  }
+}))(InputBase);
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -23,6 +31,9 @@ const styles = theme => ({
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
   },
+  icon: {
+    color: "white"
+  }
 });
 
 class SimpleSelect extends React.Component {
@@ -47,7 +58,10 @@ class SimpleSelect extends React.Component {
           <Select
             value={this.state.community}
             onChange={this.handleChange}
-            input={<InputBase name="community" id="select-community" />}
+            input={<BootstrapInput name="community" id="select-community"/>}
+            classes={{
+              icon: classes.icon
+            }}
           >
             {communities.map(c => {
               return(
