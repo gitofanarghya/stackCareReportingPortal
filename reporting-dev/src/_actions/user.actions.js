@@ -14,7 +14,8 @@ export const userActions = {
     getReportTypes,
     setReportType,
     getReports,
-    setCommunityUnitFilter
+    setCommunityUnitFilter,
+    download
 };
 
 function login(username, password) {
@@ -191,6 +192,27 @@ function getReports(reportType, communityID) {
     function request(reportType, communityID) { return { type: userConstants.GET_REPORTS_REQUEST, reportType, communityID } }
     function success(reports) { return { type: userConstants.GET_REPORTS_SUCCESS, reports } }
     function failure(error) { return { type: userConstants.GET_REPORTS_FAILURE, error } }
+}
+
+function download(reportID, communityID) {
+    return dispatch => {
+        dispatch(request(reportID, communityID))
+
+        userService.download(reportID, communityID)
+            .then(
+                data => {
+                    dispatch(success())
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            )
+    }
+    
+    function request(reportID, communityID) { return { type: userConstants.DOWNLOAD_REQUEST, reportID, communityID } }
+    function success() { return { type: userConstants.DOWNLOAD_SUCCESS } }
+    function failure(error) { return { type: userConstants.DOWNLOAD_FAILURE, error } }
 }
 
 function setCommunityUnitFilter(key) {

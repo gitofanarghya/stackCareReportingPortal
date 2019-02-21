@@ -33,7 +33,7 @@ class HomePage extends React.Component {
                         selectedReportType === null ? 
                             <Placeholder /> : 
                             reports === null ?
-                                <Loading /> :
+                                null :
                                 <Fragment>
                                     <Grid item style={{width: '225px', padding: '20px', borderRight: '0.1px solid'}}><CommunityUnits /></Grid>
                                     <Grid item style={{minWidth: '570px', padding: '20px', flexGrow: 1}}>

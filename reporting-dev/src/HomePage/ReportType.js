@@ -28,8 +28,8 @@ class ReportType extends React.Component {
         <List dense style={{fontSize: 14, color: '#404040'}}>
             {
                 reportTypes.map(r => 
-                    <ListItem key={r} onClick={(event) => this.handleListItemClick(event, r)} button style={this.state.selectedIndex === r ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }>
-                        <ListItemText primary={r} />
+                    <ListItem key={r.report_type} onClick={(event) => this.handleListItemClick(event, r.report_type)} button style={this.state.selectedIndex === r ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }>
+                        <ListItemText primary={r.title} />
                     </ListItem>
                 )
             }   
