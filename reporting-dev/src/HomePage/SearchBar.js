@@ -33,7 +33,8 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
   icon: {
-    color: "white"
+    color: "white",
+    top: 'calc(50% - 15px)'
   }
 });
 
