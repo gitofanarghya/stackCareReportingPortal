@@ -15,7 +15,8 @@ import { InputBase } from '@material-ui/core';
 const BootstrapInput = withStyles(theme => ({
   input: {
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
+    fontSize: '22px'
   }
 }))(InputBase);
 
