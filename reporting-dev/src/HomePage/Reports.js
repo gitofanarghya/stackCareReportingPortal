@@ -49,7 +49,7 @@ class Reports extends React.Component {
         <Typography style={{fontSize: 13, color: '#707070', height: '35px'}}>
             Report Name
         </Typography>  
-        <List dense style={{fontSize: 14, color: '#404040'}}>
+        <List dense style={{fontSize: 14, color: '#404040', height: 'calc(100% - 35px)', overflow: 'auto'}}>
             {
                 communityUnitFilter === 'community' ?
                 reports.community[selectedCommunity].map(r => 

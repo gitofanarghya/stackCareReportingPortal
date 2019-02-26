@@ -29,7 +29,7 @@ class CommunityUnits extends React.Component {
         <Typography style={{fontSize: 13, color: '#707070', height: '35px'}}>
             Community/Units
         </Typography>  
-        <List dense style={{fontSize: 14, color: '#404040'}}>
+        <List dense style={{fontSize: 14, color: '#404040', height: 'calc(100% - 35px)', overflow: 'auto'}}>
             <ListItem onClick={(event) => this.handleListItemClick(event, 'community')} button style={this.state.selectedIndex === 'community' ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }>
                 <ListItemText primary={communities.find(c => c.id === selectedCommunity).name} />
             </ListItem>

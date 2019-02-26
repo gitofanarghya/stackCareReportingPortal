@@ -25,9 +25,9 @@ class HomePage extends React.Component {
         
         return( userReady === false ? <Loading /> :
             <NavBar>
-                <Grid container direction='row' alignItems='stretch' justify='flex-start' style={{height:'calc(100% - 100px'}}>
+                <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
                     {
-                        reportTypes === null ? <Loading /> : <Grid item style={{width: '225px', padding: '20px', borderRight: '0.1px solid'}}><ReportType /></Grid>
+                        reportTypes === null ? <Loading /> : <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><ReportType /></Grid>
                     }
                     {
                         selectedReportType === null ? 
@@ -35,8 +35,8 @@ class HomePage extends React.Component {
                             reports === null ?
                                 null :
                                 <Fragment>
-                                    <Grid item style={{width: '225px', padding: '20px', borderRight: '0.1px solid'}}><CommunityUnits /></Grid>
-                                    <Grid item style={{minWidth: '570px', padding: '20px', flexGrow: 1}}>
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><CommunityUnits /></Grid>
+                                    <Grid item style={{minWidth: '570px', height: '100%', padding: '20px', flexGrow: 1}}>
                                         {
                                             communityUnitFilter !== null && reports !== null ? <Reports /> : null
                                         }
