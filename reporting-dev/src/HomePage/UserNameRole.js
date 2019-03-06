@@ -28,14 +28,12 @@ class UserNameRole extends React.Component {
 }
   
 function mapStateToProps(state) {
-    const { userDetails, selectedCommunity, roles } = state.user;
-    const rolesInCommunity = roles[selectedCommunity] ? roles[selectedCommunity] : null
-    const adminRole = rolesInCommunity.find(r => r.name === 'admin')
+    const { userDetails, role } = state.user;
 
     return {
         firstName: userDetails.first_name,
         lastName: userDetails.last_name,
-        role: adminRole === undefined ? 'Caregiver' : 'Administrator'
+        role
     };
 }
   

@@ -6,7 +6,6 @@ import { history } from '../_helpers';
 export const userActions = {
     login,
     logout,
-    getRoles,
     getCommunities,
     getUnits,
     getUserDetails,
@@ -42,28 +41,7 @@ function login(username, password) {
 
 function logout() {
     userService.logout();
-    return { type: userConstants.LOGOUT };
-}
-
-function getRoles() {
-    return dispatch => {
-        dispatch(request())
-
-        userService.getRoles()
-            .then(
-                roles => {
-                    dispatch(success(roles))
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
-                }
-            )
-    }
-
-    function request() { return { type: userConstants.GET_ROLES_REQUEST } }
-    function success(roles) { return { type: userConstants.GET_ROLES_SUCCESS, roles } }
-    function failure(error) { return { type: userConstants.GET_ROLES_FAILURE, error } }
+    return { type: userConstants.LOGOUT }
 }
 
 function getCommunities() {
@@ -135,7 +113,6 @@ function getUnits(communityID) {
 
 function setCommunity(id) {
     return dispatch => {
-        dispatch(getReportTypes(id))
         dispatch(getUnits(id))
         dispatch(request(id))
     }

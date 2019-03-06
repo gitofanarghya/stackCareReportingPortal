@@ -17,23 +17,23 @@ import { userActions } from '../_actions';
 class MenuList extends React.Component {
   
     render() {
-      const { adminRole, setPage, logout, currentPage } = this.props;
+      const { role, setPage, logout, currentPage } = this.props;
   
       return (
         <List> 
-            { adminRole !== undefined && <ListItem button onClick={() => setPage(1)} style={currentPage === 1 ? {color: '#1ADCFF'} : null}>
+            { role === 'admin' && <ListItem button onClick={() => setPage(1)} style={currentPage === 1 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><ListIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Reports'/>
             </ListItem> }
-            <ListItem button onClick={() => setPage(3)} style={currentPage === 3 ? {color: '#1ADCFF'} : null}>
+            <ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><SettingsIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Settings' />
             </ListItem>
-            <ListItem button onClick={() => setPage(4)} style={currentPage === 4 ? {color: '#1ADCFF'} : null}>
+            <ListItem button onClick={() => setPage(3)} style={currentPage === 3 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><ContactPhoneIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Support' />
             </ListItem>
-            <ListItem button onClick={() => logout()} style={currentPage === 5 ? {color: '#1ADCFF'} : null}>
+            <ListItem button onClick={() => logout()} style={currentPage === 4 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><ExitToAppIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Logout' />
             </ListItem>
@@ -43,12 +43,10 @@ class MenuList extends React.Component {
 }
   
 function mapStateToProps(state) {
-    const { selectedCommunity, roles, currentPage } = state.user;
-    const rolesInCommunity = roles[selectedCommunity] ? roles[selectedCommunity] : null
-    const adminRole = rolesInCommunity.find(r => r.name === 'admin')
-
+    const { role, currentPage } = state.user;
+    
     return {
-        adminRole,
+        role,
         currentPage
     };
 }

@@ -21,30 +21,35 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter } = this.props
+        const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage } = this.props
         
         return( userReady === false ? <Loading /> :
             <NavBar>
-                <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
-                    {
-                        reportTypes === null ? <Loading /> : <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><ReportType /></Grid>
-                    }
-                    {
-                        selectedReportType === null ? 
-                            <Placeholder /> : 
-                            reports === null ?
-                                null :
-                                <Fragment>
-                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><CommunityUnits /></Grid>
-                                    <Grid item style={{minWidth: '570px', height: '100%', padding: '20px', flexGrow: 1}}>
-                                        {
-                                            communityUnitFilter !== null && reports !== null ? <Reports /> : null
-                                        }
-                                    </Grid>
-                                </Fragment>
-                    }
-                </Grid>
+                {
+                    currentPage === 1 ? 
                 
+                        <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
+                            {
+                                reportTypes === null ? null : <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><ReportType /></Grid>
+                            }
+                            {
+                                reportTypes === null ? null :
+                                selectedReportType === null ? 
+                                    <Placeholder /> : 
+                                    reports === null ?
+                                        null :
+                                        <Fragment>
+                                            <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}><CommunityUnits /></Grid>
+                                            <Grid item style={{minWidth: '570px', height: '100%', padding: '20px', flexGrow: 1}}>
+                                                {
+                                                    communityUnitFilter !== null && reports !== null ? <Reports /> : null
+                                                }
+                                            </Grid>
+                                        </Fragment>
+                            }
+                        </Grid>
+                    : <div></div> 
+                }    
             </NavBar>
         )
     }
@@ -61,19 +66,20 @@ const Placeholder = () => <Grid item style={{padding: '50px', display: 'inline-f
 
 
 function mapStateToProps(state) {
-    const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter } = state.user;
+    const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage } = state.user;
+    
     return {
         userReady,
         selectedReportType,
         reports,
         reportTypes,
-        communityUnitFilter
+        communityUnitFilter,
+        currentPage
     };
 }
 
 const mapDispatchToProps = (dispatch) => ({
     init: () => {
-        dispatch(userActions.getRoles())
         dispatch(userActions.getCommunities())
         dispatch(userActions.getUserDetails())
     },

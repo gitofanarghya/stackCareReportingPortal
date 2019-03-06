@@ -22,7 +22,7 @@ class Reports extends React.Component {
         window.open(fileURL);
     }
 
-    view = (r) => {
+    view = (r) => {console.log(r)
         const requestOptions = {
             method: "GET",
             mode: "cors",
@@ -31,7 +31,7 @@ class Reports extends React.Component {
             headers: authHeader(),
             body: null
         };
-        fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+        fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
         .then(r => r.blob())
         .then(this.showFile)
     }
@@ -55,7 +55,7 @@ class Reports extends React.Component {
                 reports.community[selectedCommunity].map(r => 
                     <ListItem
                       key={r.filename}
-                      //onClick={(event) => this.handleListItemClick(event, u.id)}
+                      onClick={() => this.view(r)}
                       button
                       style={{backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }
                     >
@@ -73,7 +73,7 @@ class Reports extends React.Component {
                 reports.unit[communityUnitFilter].map(r => 
                     <ListItem
                       key={r.filename}
-                      //onClick={(event) => this.handleListItemClick(event, u.id)}
+                      onClick={() => this.view(r)}
                       button
                       style={{backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }
                     >

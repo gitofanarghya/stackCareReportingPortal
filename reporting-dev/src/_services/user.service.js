@@ -6,7 +6,6 @@ export const userService = {
     login,
     logout,
     getCommunities,
-    getRoles,
     getUnits,
     getUserDetails,
     getReportTypes,
@@ -33,7 +32,7 @@ function login(username, password) {
         })
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response
@@ -52,20 +51,6 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function getRoles() {
-    const requestOptions = {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "omit",
-        headers: authHeader(),
-        body: null
-    };
-
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/roles`, requestOptions)
-        .then(handleResponse)
-}
-
 function getCommunities() {
     const requestOptions = {
         method: "GET",
@@ -76,7 +61,7 @@ function getCommunities() {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/communities`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/communities`, requestOptions)
         .then(handleResponse)
 }
 
@@ -91,7 +76,7 @@ function getUnits(id) {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/units?community_id=${id}`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/units?community_id=${id}`, requestOptions)
         .then(handleResponse)
     
 }
@@ -106,7 +91,7 @@ function getReportTypes(id) {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/report_types`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/report_types`, requestOptions)
     //return fetch(`http://${hostName}/getReportTypes`, requestOptions)
         .then(handleResponse)
     
@@ -124,7 +109,7 @@ function getUserDetails() {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/users`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/users`, requestOptions)
         .then(handleResponse)
     
 }
@@ -139,7 +124,7 @@ function getReports(reportType, communityID) {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/reports?community_id=${communityID}&report_type=${reportType}`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/reports?community_id=${communityID}&report_type=${reportType}`, requestOptions)
     //return fetch(`http://${hostName}/getReports`, requestOptions)
         .then(handleResponse)
     
@@ -155,7 +140,7 @@ function download(reportID, communityID) {
         body: null
     };
 
-    return fetch(`https://1-6-0-c-dot-care-api-staging.appspot.com/communities/${communityID}/reports/${reportID}`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/communities/${communityID}/reports/${reportID}`, requestOptions)
     //return fetch(`http://${hostName}/getReports`, requestOptions)
     .then(function(response) {
         return response.blob();

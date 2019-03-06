@@ -6,8 +6,7 @@ const initialState = user ? {
   loggedIn: true, 
   user, 
   refreshed: true, 
-  refreshing: false, 
-  roles: null, 
+  refreshing: false,
   communities: null,
   units: null,
   userDetails: null,
@@ -17,14 +16,14 @@ const initialState = user ? {
   reportTypes: null,
   selectedReportType: null,
   reports: null,
-  communityUnitFilter: null
+  communityUnitFilter: null,
+  role: null
 } 
 : {
   loggedIn: false, 
   user: null, 
   refreshed: true, 
   refreshing: false, 
-  roles: null, 
   communities: null,
   units: null,
   userDetails: null,
@@ -34,7 +33,8 @@ const initialState = user ? {
   reportTypes: null,
   selectedReportType: null,
   reports: null,
-  communityUnitFilter: null
+  communityUnitFilter: null,
+  role: null
 };
 
 export function user(state, action) {
@@ -49,7 +49,6 @@ export function user(state, action) {
         user: action.user,
         refreshed: true,
         refreshing: false,
-        roles: null, 
         communities: null,
         units: null,
         userDetails: null,
@@ -59,7 +58,8 @@ export function user(state, action) {
         reportTypes: null,
         selectedReportType: null,
         reports: null,
-        communityUnitFilter: null
+        communityUnitFilter: null,
+        role: null
       };
     case userConstants.LOGIN_SUCCESS:
       return {
@@ -68,7 +68,6 @@ export function user(state, action) {
         user: action.user,
         refreshed: true,
         refreshing: false,
-        roles: null, 
         communities: null,
         units: null,
         userDetails: null,
@@ -78,7 +77,8 @@ export function user(state, action) {
         reportTypes: null,
         selectedReportType: null,
         reports: null,
-        communityUnitFilter: null
+        communityUnitFilter: null,
+        role: null
       };
     case userConstants.LOGIN_FAILURE:
       return initialState
@@ -98,18 +98,6 @@ export function user(state, action) {
       return initialState
     case userConstants.LOGOUT:
       return initialState
-    case userConstants.GET_ROLES_REQUEST:
-      return {
-        ...state,
-        loggedIn: true
-      }
-    case userConstants.GET_ROLES_SUCCESS:
-      return {
-        ...state,
-        loggedIn: true,
-        roles: action.roles,
-        userReady: state.communities !== null && state.userDetails !== null ? true : false
-      }
     case userConstants.GET_COMMUNITIES_REQUEST:
       return {
         ...state,
@@ -121,7 +109,9 @@ export function user(state, action) {
         loggedIn: true,
         communities: action.communities,
         selectedCommunity: action.communities[0].id,
-        userReady: state.userDetails !== null && state.roles !== null ? true : false
+        role: action.communities[0].role,
+        currentPage: action.communities[0].role === 'admin' ? 1 : 2,
+        userReady: state.userDetails !== null ? true : false
       }
     case userConstants.GET_USER_DETAILS_REQUEST:
       return {
@@ -133,7 +123,7 @@ export function user(state, action) {
         ...state,
         loggedIn: true,
         userDetails: action.userDetails,
-        userReady: state.communities !== null && state.roles !== null ? true : false
+        userReady: state.communities !== null ? true : false
       }
     case userConstants.GET_UNITS_REQUEST:
       return {
@@ -151,7 +141,8 @@ export function user(state, action) {
         ...state,
         loggedIn: true,
         selectedCommunity: action.id,
-        reportTypes: null,
+        role: state.communities.find(c => c.id === action.id).role,
+        currentPage: state.communities.find(c => c.id === action.id).role === 'admin' ? 1 : 2,
         reports: null,
         selectedReportType: null,
         communityUnitFilter: null

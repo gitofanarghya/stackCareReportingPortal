@@ -12,8 +12,17 @@
 # limitations under the License.
 
 # [START gae_quickstart_yaml]
+
 runtime: nodejs8
+
 service: portal
-api_version: 1
+
 instance_class: F1
+
+handlers:
+- url: /.*
+  script: true
+  secure: always
+  redirect_http_response_code: 301
+
 # [END gae_quickstart_yaml]

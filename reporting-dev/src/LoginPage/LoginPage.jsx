@@ -69,7 +69,7 @@ class LoginPage extends React.Component {
             <Grid container justify="space-between" alignItems='center' style={{height: '64px'}}>
               <Grid item xs={false} sm={false} md={2} className="logo-bg"></Grid>
               <Grid item>
-                <Typography variant="display1" color="primary">
+                <Typography variant="display1" style={{color: 'white'}}>
                     Care Portal
                 </Typography>
               </Grid>
