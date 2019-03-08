@@ -13,8 +13,6 @@ export const userService = {
     download
 };
 
-const hostName = window.location.hostname+':8888';
-
 function login(username, password) {
     const requestOptions = {
         method: "POST",
@@ -35,11 +33,8 @@ function login(username, password) {
     return fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
         .then(handleResponse)
         .then(user => {
-            // login successful if there's a jwt token in the response
             if (user.access_token) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
-                //window.location.reload(true)
             }
 
             return user;
@@ -47,7 +42,6 @@ function login(username, password) {
 }
 
 function logout() {
-    // remove user from local storage to log user out
     localStorage.removeItem('user');
 }
 
@@ -92,7 +86,6 @@ function getReportTypes(id) {
     };
 
     return fetch(`https://care-api-staging.appspot.com/report_types`, requestOptions)
-    //return fetch(`http://${hostName}/getReportTypes`, requestOptions)
         .then(handleResponse)
     
 }
@@ -125,7 +118,6 @@ function getReports(reportType, communityID) {
     };
 
     return fetch(`https://care-api-staging.appspot.com/reports?community_id=${communityID}&report_type=${reportType}`, requestOptions)
-    //return fetch(`http://${hostName}/getReports`, requestOptions)
         .then(handleResponse)
     
 }
@@ -141,7 +133,6 @@ function download(reportID, communityID) {
     };
 
     return fetch(`https://care-api-staging.appspot.com/communities/${communityID}/reports/${reportID}`, requestOptions)
-    //return fetch(`http://${hostName}/getReports`, requestOptions)
     .then(function(response) {
         return response.blob();
       }).then(function(blob) {
@@ -160,10 +151,8 @@ function handleResponse(response) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
                 logout();
-                window.location.reload(true);
             }
             logout();
-            window.location.reload(true);
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }

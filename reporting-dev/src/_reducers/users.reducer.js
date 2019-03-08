@@ -95,9 +95,41 @@ export function user(state, action) {
         refreshing: false
       };
     case userConstants.REFRESH_FAILURE:
-      return initialState
+      return {
+        loggedIn: false, 
+        user: null, 
+        refreshed: true, 
+        refreshing: false, 
+        communities: null,
+        units: null,
+        userDetails: null,
+        userReady: false,
+        selectedCommunity: null,
+        currentPage: 1,
+        reportTypes: null,
+        selectedReportType: null,
+        reports: null,
+        communityUnitFilter: null,
+        role: null
+      }
     case userConstants.LOGOUT:
-      return initialState
+      return {
+        loggedIn: false, 
+        user: null, 
+        refreshed: true, 
+        refreshing: false, 
+        communities: null,
+        units: null,
+        userDetails: null,
+        userReady: false,
+        selectedCommunity: null,
+        currentPage: 1,
+        reportTypes: null,
+        selectedReportType: null,
+        reports: null,
+        communityUnitFilter: null,
+        role: null
+      }
     case userConstants.GET_COMMUNITIES_REQUEST:
       return {
         ...state,
