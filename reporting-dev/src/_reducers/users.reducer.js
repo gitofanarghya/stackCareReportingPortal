@@ -17,7 +17,13 @@ const initialState = user ? {
   selectedReportType: null,
   reports: null,
   communityUnitFilter: null,
-  role: null
+  role: null,
+  resetPass: {
+    email: null,
+    code: null,
+    sent: false,
+    newPass: null
+  }
 } 
 : {
   loggedIn: false, 
@@ -34,7 +40,13 @@ const initialState = user ? {
   selectedReportType: null,
   reports: null,
   communityUnitFilter: null,
-  role: null
+  role: null,
+  resetPass: {
+    email: null,
+    code: null,
+    sent: false,
+    newPass: null
+  }
 };
 
 export function user(state, action) {
@@ -59,7 +71,13 @@ export function user(state, action) {
         selectedReportType: null,
         reports: null,
         communityUnitFilter: null,
-        role: null
+        role: null,
+        resetPass: {
+          email: null,
+          code: null,
+          sent: false,
+          newPass: null
+        }
       };
     case userConstants.LOGIN_SUCCESS:
       return {
@@ -78,7 +96,13 @@ export function user(state, action) {
         selectedReportType: null,
         reports: null,
         communityUnitFilter: null,
-        role: null
+        role: null,
+        resetPass: {
+          email: null,
+          code: null,
+          sent: false,
+          newPass: null
+        }
       };
     case userConstants.LOGIN_FAILURE:
       return initialState
@@ -110,7 +134,13 @@ export function user(state, action) {
         selectedReportType: null,
         reports: null,
         communityUnitFilter: null,
-        role: null
+        role: null,
+        resetPass: {
+          email: null,
+          code: null,
+          sent: false,
+          newPass: null
+        }
       }
     case userConstants.LOGOUT:
       return {
@@ -128,7 +158,13 @@ export function user(state, action) {
         selectedReportType: null,
         reports: null,
         communityUnitFilter: null,
-        role: null
+        role: null,
+        resetPass: {
+          email: null,
+          code: null,
+          sent: false,
+          newPass: null
+        }
       }
     case userConstants.GET_COMMUNITIES_REQUEST:
       return {
@@ -215,6 +251,38 @@ export function user(state, action) {
       return {
         ...state,
         communityUnitFilter: action.key
+      }
+    case userConstants.REQUEST_CODE:
+      return {
+        ...state,
+        resetPass: {
+          email: action.email
+        }
+      }
+    case userConstants.REQUEST_CODE_SUCCESS:
+      return {
+        ...state,
+        resetPass: {
+          sent: true
+        }
+      }
+    case userConstants.RESET_PASSWORD_REQUEST:
+      return {
+        ...state,
+        resetPass: {
+          code: action.code,
+          newPass: action.newPass
+        }
+      }
+    case userConstants.RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        resetPass: {
+          email: null,
+          code: null,
+          newPass: null,
+          sent: false
+        }
       }
     default:
       return state

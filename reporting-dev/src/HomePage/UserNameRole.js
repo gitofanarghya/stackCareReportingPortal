@@ -21,7 +21,7 @@ class UserNameRole extends React.Component {
   
       return (
         <Typography variant="subtitle2" style={{color: 'white', textAlign: 'center'}}>
-            {firstName} {lastName} ({role})
+            {firstName} {lastName} ({role === 'admin' ? 'Admin' : role === 'caregiver' ? 'Caregiver' : role === 'installer' ? 'Installer' : role})
         </Typography>  
         )
     }

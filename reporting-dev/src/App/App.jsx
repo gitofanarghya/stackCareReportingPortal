@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { alertActions } from '../_actions'
 import { history } from '../_helpers';
 import { PrivateRoute, Loading } from '../_components';
 import { HomePage } from '../HomePage';
@@ -21,13 +21,16 @@ class App extends React.Component {
         if (reason === 'clickaway') {
           return;
         }
-        this.setState({ open: false });
+        this.props.clearAlert()
+        this.setState({ open: false, message: null });
     }
 
     componentWillReceiveProps = (nextProps) => {
         if(nextProps.message !== undefined) {
             if(this.state.open) {
                 this.setState({open:false})
+                this.setState({open: true, message: nextProps.message})
+            } else {
                 this.setState({open: true, message: nextProps.message})
             }
         }
@@ -82,5 +85,12 @@ function mapStateToProps(state) {
 }
 
 
-const connectedApp = connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => ({
+    clearAlert: () => {
+        dispatch(alertActions.clear());
+    },
+})
+
+
+const connectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
 export { connectedApp as App }; 

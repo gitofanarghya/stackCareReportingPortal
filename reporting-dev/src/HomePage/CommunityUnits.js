@@ -22,11 +22,11 @@ class CommunityUnits extends React.Component {
     };
     
     render() {
-      const { units, selectedCommunity, communities, reports, enabledUnits } = this.props;
+      const { sortedUnits, selectedCommunity, communities } = this.props;
   
       return (
         <Fragment>
-        <Typography style={{fontSize: 13, color: '#707070', height: '35px'}}>
+        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: 'bold'}}>
             Community/Units
         </Typography>  
         <List dense style={{fontSize: 14, color: '#404040', height: 'calc(100% - 35px)', overflow: 'auto'}}>
@@ -34,9 +34,8 @@ class CommunityUnits extends React.Component {
                 <ListItemText primary={communities.find(c => c.id === selectedCommunity).name} />
             </ListItem>
             {
-                units.map(u => 
+                sortedUnits.map(u => 
                     <ListItem
-                      disabled={enabledUnits.indexOf(u.id) === -1}
                       key={u.id}
                       onClick={(event) => this.handleListItemClick(event, u.id)}
                       button
@@ -54,12 +53,16 @@ class CommunityUnits extends React.Component {
   
 function mapStateToProps(state) {
     const { units, selectedCommunity, communities, reports } = state.user;
+    const sortedUnits = units.sort((a, b) => {
+        if(a.name < b.name) { return -1; }
+        if(a.name > b.name) { return 1; }
+        return 0;
+    })
     return {
-        units,
+        sortedUnits,
         selectedCommunity,
         communities,
-        reports,
-        enabledUnits: Object.keys(reports.unit)
+        reports
     };
 }
 

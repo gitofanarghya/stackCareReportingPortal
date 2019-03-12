@@ -14,8 +14,37 @@ export const userActions = {
     setReportType,
     getReports,
     setCommunityUnitFilter,
-    download
+    download,
+    requestCode,
+    resetPassword
 };
+
+function requestCode(email) {
+    return dispatch => {
+        dispatch({ type: userConstants.REQUEST_CODE, email })
+
+        userService.requestCode(email)
+            .then(data => {
+                dispatch({ type: userConstants.REQUEST_CODE_SUCCESS })
+            }, error => {
+                dispatch(alertActions.error(error.toString()));
+            })
+    }
+}
+
+function resetPassword(email, code, newPass) {
+    return dispatch => {
+        dispatch({ type: userConstants.RESET_PASSWORD_REQUEST, code, newPass })
+
+        userService.resetPassword(email, code, newPass)
+            .then(data => {
+                dispatch({ type: userConstants.RESET_PASSWORD_SUCCESS })
+                dispatch(alertActions.success('Password reset complete. Login to continue'))
+            }, error => {
+                dispatch(alertActions.error(error.toString()));
+            })
+    }
+}
 
 function login(username, password) {
     return dispatch => {
@@ -171,11 +200,11 @@ function getReports(reportType, communityID) {
     function failure(error) { return { type: userConstants.GET_REPORTS_FAILURE, error } }
 }
 
-function download(reportID, communityID) {
+function download(reportID, communityID, fileName) {
     return dispatch => {
         dispatch(request(reportID, communityID))
 
-        userService.download(reportID, communityID)
+        userService.download(reportID, communityID, fileName)
             .then(
                 data => {
                     dispatch(success())

@@ -26,8 +26,6 @@ const checkTokenExpirationMiddleware = store => next => action => {
             .then(response => response.json())
             .then(user => {
                 if (user.access_token) {
-                    var userObj = JSON.parse(localStorage.getItem('user'))
-                    user.allCommunities = userObj.allCommunities
                     localStorage.setItem('user', JSON.stringify(user));
                     store.dispatch(success(user))
                 }
