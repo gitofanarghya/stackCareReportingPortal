@@ -47,7 +47,7 @@ class LoginPage extends React.Component {
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ ...this.state, [name]: value });
     }
 
     handleSubmit(e) {
@@ -112,9 +112,9 @@ class LoginPage extends React.Component {
                         />
                         <br />
                         <br />
-                        <center><Button type="submit" className="submit-button">
-                            Login
-                        </Button></center>
+                        <center>
+                            <Button type="submit" className="submit-button">Login</Button>
+                        </center>
                     </form>
                 </CardContent>
             </Card>

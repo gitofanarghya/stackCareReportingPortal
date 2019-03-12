@@ -10,8 +10,68 @@ export const userService = {
     getUserDetails,
     getReportTypes,
     getReports,
-    download
+    download,
+    requestCode,
+    resetPassword
 };
+
+function requestCode(email) {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "omit",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+    };
+
+    return fetch(`https://care-api-staging.appspot.com/login/password/reset`, requestOptions)
+        .then(response => {
+            return response.json().then(data => {
+                if(!response.ok) {
+                    const error = data.error.message
+                    return Promise.reject(error);
+                } else {
+                    return data     
+                }    
+            })
+        })
+
+}
+
+function resetPassword(email, code, newPass) {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "omit",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({
+            "email": email,
+            "password": newPass,
+            "token": code
+        })
+    };
+
+    return fetch(`https://care-api-staging.appspot.com/login/password/reset`, requestOptions)
+        .then(response => {
+            return response.json().then(data => {
+                if(!response.ok) {
+                    const error = data.error.message
+                    return Promise.reject(error);
+                } else {
+                    return data     
+                }    
+            })
+        })
+
+}
 
 function login(username, password) {
     const requestOptions = {
@@ -31,14 +91,20 @@ function login(username, password) {
     };
 
     return fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            if (user.access_token) {
-                localStorage.setItem('user', JSON.stringify(user));
-            }
-
-            return user;
-        });
+        .then(response => {
+            return response.json().then(data => {
+                if(!response.ok) {
+                    logout();
+                    const error = data.error.message
+                    return Promise.reject(error);
+                } else {
+                    if (data.access_token) {
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }
+                    return data     
+                }    
+            })
+        })
 }
 
 function logout() {
@@ -122,7 +188,7 @@ function getReports(reportType, communityID) {
     
 }
 
-function download(reportID, communityID) {
+function download(reportID, communityID, fileName) {
     const requestOptions = {
         method: "GET",
         mode: "cors",
@@ -137,7 +203,7 @@ function download(reportID, communityID) {
         return response.blob();
       }).then(function(blob) {
         var data = true
-        FileSaver.saveAs(blob)
+        FileSaver.saveAs(blob, fileName + '.pdf')
         return data
       }).catch(error => Promise.reject(error))
     
@@ -148,15 +214,10 @@ function handleResponse(response) {
     return response.json().then(json => {
         const data = json
         if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
-            }
             logout();
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-
         return data;
     });
 }

@@ -50,7 +50,7 @@ class Reports extends React.Component {
     }
 
     download = (r) => {
-        this.props.download(r.id, r.community_id)
+        this.props.download(r.id, r.community_id, r.filename)
     }
 
     handleChange = (event) => {
@@ -64,19 +64,34 @@ class Reports extends React.Component {
         var dt2 = new Date(date2);
         return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
     }
+
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    monthsFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+    dateFormatter = (r) => {
+        const startDate = new Date(r.start_date)
+        const endDate = new Date(r.end_date)
+        if (r.period === 'weekly') {
+            return `${startDate.getFullYear()} ${this.months[startDate.getMonth()]} ${startDate.getDate()} - ${this.months[endDate.getMonth()]} ${endDate.getDate()}`
+        } else {
+            return `${startDate.getFullYear()} ${this.monthsFull[startDate.getMonth()]}`
+        }
+    }
+
+    periodFormatter = (period) => period === 'weekly' ? 'Weekly' : 'Monthly'
     
     render() {
       const { communityUnitFilter, reports, selectedCommunity } = this.props;
 
       const filteredReports =  communityUnitFilter === 'community' ? 
-                                reports.community[selectedCommunity].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period) :
-                                reports.unit[communityUnitFilter].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period)
+                                reports.community[selectedCommunity] && reports.community[selectedCommunity].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period) :
+                                reports.unit[communityUnitFilter] && reports.unit[communityUnitFilter].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period)
                          
       return (
-        reports.community[selectedCommunity] === undefined ? <NoReports /> :  
+        filteredReports === undefined ? <NoReports /> :  
         <Fragment>
         <div style={{display: 'flex'}}>
-        <Typography style={{fontSize: 13, color: '#707070', height: '35px'}}>
+        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: 'bold'}}>
             Report Name
         </Typography>  
         <FormControl style={{ marginLeft: 'auto', height: '25px', width: '135px', fontSize: 13 }}>
@@ -102,7 +117,7 @@ class Reports extends React.Component {
                       button
                       style={{backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }
                     >
-                        <ListItemText primary={r.filename} />
+                        <ListItemText primary={`${this.periodFormatter(r.period)} | ${this.dateFormatter(r)}`} />
                         <ListItemSecondaryAction>
                             <IconButton aria-label="download" onClick={() => this.view(r)}>
                                 <RemoveRedEyeIcon />
@@ -136,8 +151,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    download: (reportID, communityID) => {
-        dispatch(userActions.download(reportID, communityID))
+    download: (reportID, communityID, fileName) => {
+        dispatch(userActions.download(reportID, communityID, fileName))
     }
 })
   

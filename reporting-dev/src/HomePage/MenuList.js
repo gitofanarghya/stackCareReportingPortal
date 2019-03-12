@@ -25,10 +25,10 @@ class MenuList extends React.Component {
               <ListItemIcon style={{color: 'inherit'}}><ListIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Reports'/>
             </ListItem> }
-            <ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF'} : null}>
+            {/*<ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><SettingsIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Settings' />
-            </ListItem>
+              </ListItem>*/}
             <ListItem button onClick={() => setPage(3)} style={currentPage === 3 ? {color: '#1ADCFF'} : null}>
               <ListItemIcon style={{color: 'inherit'}}><ContactPhoneIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Support' />
