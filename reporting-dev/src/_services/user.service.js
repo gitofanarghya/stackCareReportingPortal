@@ -1,5 +1,4 @@
-import { authHeader, history } from '../_helpers';
-import FileSaver from 'file-saver';
+import { authHeader } from '../_helpers';
 
 
 export const userService = {
@@ -10,7 +9,6 @@ export const userService = {
     getUserDetails,
     getReportTypes,
     getReports,
-    download,
     requestCode,
     resetPassword
 };
@@ -31,21 +29,22 @@ function requestCode(email) {
 
     return fetch(`https://care-api-staging.appspot.com/login/password/reset`, requestOptions)
         .then(response => {
-            return response.json().then(data => {
-                if(!response.ok) {
-                    const error = data.error.message
+            if(!response.ok) {
+                return response.json().then(json => {
+                    const error = json.error.message
                     return Promise.reject(error);
-                } else {
-                    return data     
-                }    
-            })
+                })
+            } else {
+                return true     
+            }    
+            
         })
 
 }
 
 function resetPassword(email, code, newPass) {
     const requestOptions = {
-        method: "POST",
+        method: "PUT",
         mode: "cors",
         cache: "no-cache",
         credentials: "omit",
@@ -187,28 +186,6 @@ function getReports(reportType, communityID) {
         .then(handleResponse)
     
 }
-
-function download(reportID, communityID, fileName) {
-    const requestOptions = {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "omit",
-        headers: authHeader(),
-        body: null
-    };
-
-    return fetch(`https://care-api-staging.appspot.com/communities/${communityID}/reports/${reportID}`, requestOptions)
-    .then(function(response) {
-        return response.blob();
-      }).then(function(blob) {
-        var data = true
-        FileSaver.saveAs(blob, fileName + '.pdf')
-        return data
-      }).catch(error => Promise.reject(error))
-    
-}
-
 
 function handleResponse(response) {
     return response.json().then(json => {

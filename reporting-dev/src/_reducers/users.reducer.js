@@ -19,11 +19,11 @@ const initialState = user ? {
   communityUnitFilter: null,
   role: null,
   resetPass: {
-    email: null,
-    code: null,
-    sent: false,
-    newPass: null
-  }
+    forgotPass: false,
+    sentCode: false
+  },
+  filter1: 'All reports',
+  filter2: 90
 } 
 : {
   loggedIn: false, 
@@ -42,11 +42,11 @@ const initialState = user ? {
   communityUnitFilter: null,
   role: null,
   resetPass: {
-    email: null,
-    code: null,
-    sent: false,
-    newPass: null
-  }
+    forgotPass: false,
+    sentCode: false
+  },
+  filter1: 'All reports',
+  filter2: 90
 };
 
 export function user(state, action) {
@@ -73,13 +73,41 @@ export function user(state, action) {
         communityUnitFilter: null,
         role: null,
         resetPass: {
-          email: null,
-          code: null,
-          sent: false,
-          newPass: null
-        }
+          forgotPass: false,
+          sentCode: false
+        },
+        filter1: 'All reports',
+        filter2: 90
       };
     case userConstants.LOGIN_SUCCESS:
+      return {
+        ...state,
+        loggedIn: true,
+        loggingIn: false,
+        user: action.user,
+        refreshed: true,
+        refreshing: false,
+        communities: null,
+        units: null,
+        userDetails: null,
+        userReady: false,
+        selectedCommunity: null,
+        currentPage: 1,
+        reportTypes: null,
+        selectedReportType: null,
+        reports: null,
+        communityUnitFilter: null,
+        role: null,
+        resetPass: {
+          forgotPass: false,
+          sentCode: false
+        },
+        filter1: 'All reports',
+        filter2: 90
+      };
+    case userConstants.LOGIN_FAILURE:
+      return initialState
+    case 'REFRESHED':
       return {
         ...state,
         loggedIn: true,
@@ -98,50 +126,12 @@ export function user(state, action) {
         communityUnitFilter: null,
         role: null,
         resetPass: {
-          email: null,
-          code: null,
-          sent: false,
-          newPass: null
-        }
+          forgotPass: false,
+          sentCode: false
+        },
+        filter1: 'All reports',
+        filter2: 90
       };
-    case userConstants.LOGIN_FAILURE:
-      return initialState
-    case userConstants.REFRESH_REQUEST:
-      return {
-        ...state,
-        refreshing: true,
-        refreshed: false
-      };
-    case userConstants.REFRESH_SUCCESS:
-      return {
-        ...state,
-        refreshed: true,
-        refreshing: false
-      };
-    case userConstants.REFRESH_FAILURE:
-      return {
-        loggedIn: false, 
-        user: null, 
-        refreshed: true, 
-        refreshing: false, 
-        communities: null,
-        units: null,
-        userDetails: null,
-        userReady: false,
-        selectedCommunity: null,
-        currentPage: 1,
-        reportTypes: null,
-        selectedReportType: null,
-        reports: null,
-        communityUnitFilter: null,
-        role: null,
-        resetPass: {
-          email: null,
-          code: null,
-          sent: false,
-          newPass: null
-        }
-      }
     case userConstants.LOGOUT:
       return {
         loggedIn: false, 
@@ -160,11 +150,11 @@ export function user(state, action) {
         communityUnitFilter: null,
         role: null,
         resetPass: {
-          email: null,
-          code: null,
-          sent: false,
-          newPass: null
-        }
+          forgotPass: false,
+          sentCode: false
+        },
+        filter1: 'All reports',
+        filter2: 90
       }
     case userConstants.GET_COMMUNITIES_REQUEST:
       return {
@@ -209,18 +199,30 @@ export function user(state, action) {
         ...state,
         loggedIn: true,
         selectedCommunity: action.id,
-        role: state.communities.find(c => c.id === action.id).role,
-        currentPage: state.communities.find(c => c.id === action.id).role === 'admin' ? 1 : 2,
+        role: state.communities.filter(c => c.id === action.id)[0].role,
+        currentPage: state.communities.filter(c => c.id === action.id)[0].role === 'admin' ? 1 : 2,
         reports: null,
         selectedReportType: null,
-        communityUnitFilter: null
+        communityUnitFilter: null,
+        filter1: 'All reports',
+        filter2: 90
       } 
     case 'CHANGE_PAGE':
       return {
         ...state,
         loggedIn: true,
         currentPage: action.id
-      } 
+      }
+    case 'SET_FILTER1':
+      return {
+        ...state,
+        filter1: action.val
+      }
+    case 'SET_FILTER2':
+      return {
+          ...state,
+          filter2: action.val
+      }
     case userConstants.GET_REPORT_TYPES_REQUEST:
       return {
         ...state,
@@ -252,38 +254,46 @@ export function user(state, action) {
         ...state,
         communityUnitFilter: action.key
       }
-    case userConstants.REQUEST_CODE:
+    case userConstants.FORGOTPASS:
       return {
         ...state,
         resetPass: {
-          email: action.email
+          forgotPass: true,
+          sentCode: false
         }
       }
+    case userConstants.CANCEL:
+      return {
+        ...state,
+        resetPass: {
+          forgotPass: false,
+          sentCode: false
+        }
+      }
+    case userConstants.REQUEST_CODE:
+      return state
     case userConstants.REQUEST_CODE_SUCCESS:
       return {
         ...state,
         resetPass: {
-          sent: true
+          sentCode: true,
+          forgotPass: true
         }
       }
+    case userConstants.REQUEST_CODE_FAILURE:
+      return state
     case userConstants.RESET_PASSWORD_REQUEST:
-      return {
-        ...state,
-        resetPass: {
-          code: action.code,
-          newPass: action.newPass
-        }
-      }
+      return state
     case userConstants.RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         resetPass: {
-          email: null,
-          code: null,
-          newPass: null,
-          sent: false
+          sentCode: false,
+          forgotPass: false
         }
       }
+    case userConstants.RESET_PASSWORD_FAILURE:
+      return state
     default:
       return state
   }

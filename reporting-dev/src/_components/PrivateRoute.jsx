@@ -2,9 +2,9 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { Loading } from './Loading'
 
-export const PrivateRoute = ({ component: Component, ...rest, refreshed: refreshed }) => (
+export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        localStorage.getItem('user') ? refreshed ? <Component {...props} /> : <Loading />
+        localStorage.getItem('user') ? <Component {...props} />
             : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
     )} /> 
 )

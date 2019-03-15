@@ -14,33 +14,49 @@ export const userActions = {
     setReportType,
     getReports,
     setCommunityUnitFilter,
-    download,
     requestCode,
-    resetPassword
+    resetPassword,
+    cancel,
+    forgotPass
 };
+
+function cancel() {
+    return dispatch => {
+        dispatch({ type: userConstants.CANCEL })
+    }
+}
+
+function forgotPass() {
+    return dispatch => {
+        dispatch({ type: userConstants.FORGOTPASS })
+    }
+}
 
 function requestCode(email) {
     return dispatch => {
-        dispatch({ type: userConstants.REQUEST_CODE, email })
+        dispatch({ type: userConstants.REQUEST_CODE })
 
         userService.requestCode(email)
             .then(data => {
                 dispatch({ type: userConstants.REQUEST_CODE_SUCCESS })
+                dispatch(alertActions.success('Code sent!'))
             }, error => {
-                dispatch(alertActions.error(error.toString()));
+                dispatch({ type: userConstants.REQUEST_CODE_FAILURE })
+                dispatch(alertActions.error(error))
             })
     }
 }
 
 function resetPassword(email, code, newPass) {
     return dispatch => {
-        dispatch({ type: userConstants.RESET_PASSWORD_REQUEST, code, newPass })
+        dispatch({ type: userConstants.RESET_PASSWORD_REQUEST })
 
         userService.resetPassword(email, code, newPass)
             .then(data => {
                 dispatch({ type: userConstants.RESET_PASSWORD_SUCCESS })
                 dispatch(alertActions.success('Password reset complete. Login to continue'))
             }, error => {
+                dispatch({ type: userConstants.RESET_PASSWORD_FAILURE })
                 dispatch(alertActions.error(error.toString()));
             })
     }
@@ -198,27 +214,6 @@ function getReports(reportType, communityID) {
     function request(reportType, communityID) { return { type: userConstants.GET_REPORTS_REQUEST, reportType, communityID } }
     function success(reports) { return { type: userConstants.GET_REPORTS_SUCCESS, reports } }
     function failure(error) { return { type: userConstants.GET_REPORTS_FAILURE, error } }
-}
-
-function download(reportID, communityID, fileName) {
-    return dispatch => {
-        dispatch(request(reportID, communityID))
-
-        userService.download(reportID, communityID, fileName)
-            .then(
-                data => {
-                    dispatch(success())
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
-                }
-            )
-    }
-    
-    function request(reportID, communityID) { return { type: userConstants.DOWNLOAD_REQUEST, reportID, communityID } }
-    function success() { return { type: userConstants.DOWNLOAD_SUCCESS } }
-    function failure(error) { return { type: userConstants.DOWNLOAD_FAILURE, error } }
 }
 
 function setCommunityUnitFilter(key) {

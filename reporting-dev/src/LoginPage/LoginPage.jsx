@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { userActions } from '../_actions';
+import { userActions, alertActions } from '../_actions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -20,48 +19,73 @@ const styles = {
         backgroundColor: "#525963"
     },
     card: {
-        maxHeight: 450
-      },
-      media: {
+        //maxHeight: 450
+    },
+    media: {
         paddingTop: '213.64px',//'56.25%', // 16:9
         'background-size': 'contain'
-      }
+    },
+    forgot: {
+        "&:hover": {
+            backgroundColor: "transparent"
+        }
+    }
 }
 
 class LoginPage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // reset login status
-        this.props.dispatch(userActions.logout());
-
-        this.state = {
-            username: '',
-            password: '',
-            submitted: false
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    
+    state = {
+        username: '',
+        password: '',
+        code: '',
+        newPass: '',
+        confirmPass: ''
     }
 
-    handleChange(e) {
+    handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ ...this.state, [name]: value });
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
-        //this.setState({ submitted: true });
+    handleSubmit = (e) => {
         const { username, password } = this.state;
-        const { dispatch } = this.props;
         if (username && password) {
-            dispatch(userActions.login(username, password));
+            this.props.login(username, password)
         }
     }
 
+    forgotPassword = (e) => {
+        this.props.forgotPassword()
+    }
+
+    cancel = (e) => {
+        this.props.cancel()
+    }
+
+    sendCode = (e) => {
+        if(this.state.username !== '') {
+            this.props.sendCode(this.state.username)
+        } else {
+            this.props.alert("please fill email")
+        }
+        
+    }
+
+    reset = (e) => {
+        if(this.state.username !== '' && this.state.confirmPass !== '' && this.state.code !== '') {
+            if(this.state.newPass === this.state.confirmPass) {
+                this.props.reset(this.state.username, this.state.code, this.state.newPass)
+            } else {
+                this.props.alert("passwords don't match!")
+            }
+        } else {
+            this.props.alert("all fields are mandatory")
+        }
+        
+    }
+
     render() {
-        const { loggingIn, classes } = this.props;
+        const { loggingIn, classes, forgotPass, sentCode } = this.props
         return ( loggingIn ? <Loading /> :
             <div style={{height: 'calc(100% - 64px)'}}>
             <AppBar className={classes.AppBar} position="static">
@@ -88,7 +112,52 @@ class LoginPage extends React.Component {
                     image="/img/logo.png"
                 />
                 <CardContent>
-                    <form onSubmit={this.handleSubmit}>
+                    {
+                    forgotPass ? 
+                    sentCode ? 
+                    <form noValidate autoComplete="off">
+                        <div style={{fontSize: 15, fontWeight: 500, paddingTop: 10}}>Forgot password</div>
+                        <div style={{fontSize: 13, color: '#707070', paddingTop: 10}}>An email has been sent with a code. You will need to enter code below to reset your password.</div>
+                        <TextField
+                            name="code"
+                            label="Reset Code"
+                            placeholder="Enter your code"
+                            className="code-field"
+                            margin="dense"
+                            onChange={this.handleChange}
+                            fullWidth
+                            value={this.state.code}
+                        />
+                        <div style={{fontSize: 13, color: '#707070'}}>Didn't receive the code? <span onClick={() => this.sendCode()} style={{color: '#1ADCFF', cursor: 'pointer'}}>send the code again.</span></div>
+                        <TextField
+                            name="newPass"
+                            label="New Password"
+                            placeholder="Enter your new password"
+                            className="newPass-field"
+                            margin="dense"
+                            onChange={this.handleChange}
+                            fullWidth
+                            value={this.state.newPass}
+                            type='password'
+                        />
+                        <TextField
+                            name="confirmPass"
+                            label="Confirm New Password"
+                            placeholder="Enter your new password again"
+                            className="confirmPass-field"
+                            margin="dense"
+                            onChange={this.handleChange}
+                            fullWidth
+                            value={this.state.confirmPass}
+                            type='password'
+                        />
+                        <br />
+                        <Button variant='contained' onClick={() => this.reset()} style={{marginTop: 8}}>RESET</Button>
+                        <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.cancel()} style={{ fontSize: 14, color: '#707070', textTransform: 'capitalize', padding: '0px', marginTop: 8}}>Cancel</Button>
+                    </form> : 
+                    <form noValidate autoComplete="off">
+                        <div style={{fontSize: 15, fontWeight: 500, paddingTop: 10}}>Forgot password</div>
+                        <div style={{fontSize: 13, color: '#707070', paddingTop: 10}}>No problem! Enter your email address below and we'll send you a code you can use to reset your password.</div>
                         <TextField
                             name="username"
                             label="Email Id"
@@ -97,6 +166,22 @@ class LoginPage extends React.Component {
                             margin="normal"
                             onChange={this.handleChange}
                             fullWidth
+                            value={this.state.username}
+                        />
+                        <br />
+                        <Button variant='contained' onClick={() => this.sendCode()} style={{marginTop: 8}}>SEND CODE</Button>
+                        <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.cancel()} style={{ fontSize: 14, color: '#707070', textTransform: 'capitalize', padding: '0px', marginTop: 8}}>Cancel</Button>
+                    </form>  : 
+                    <form noValidate autoComplete="off">
+                        <TextField
+                            name="username"
+                            label="Email Id"
+                            placeholder="Enter your email id"
+                            className="email-field"
+                            margin="normal"
+                            onChange={this.handleChange}
+                            fullWidth
+                            value={this.state.username}
                         />
                         <br />
                         <TextField
@@ -109,13 +194,14 @@ class LoginPage extends React.Component {
                             margin="normal"
                             onChange={this.handleChange}
                             fullWidth
+                            value={this.state.password}
                         />
                         <br />
-                        <br />
-                        <center>
-                            <Button type="submit" className="submit-button">Login</Button>
-                        </center>
+                        <Button variant='contained' onClick={() => this.handleSubmit()} style={{marginTop: 8}}>Login</Button>
+                        <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.forgotPassword()} style={{ fontSize: 13, color: '#707070', display: 'flex', textTransform: 'capitalize', padding: '0px', lineHeight: 3 }}>Forgot password?</Button>
+                        
                     </form>
+                    }
                 </CardContent>
             </Card>
               </Grid>
@@ -131,11 +217,35 @@ class LoginPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { loggingIn } = state.user;
+    const { loggingIn, resetPass } = state.user;
+    const { forgotPass, sentCode } = resetPass
     return {
-        loggingIn
+        loggingIn,
+        forgotPass,
+        sentCode
     };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(withStyles(styles)(LoginPage));
+const mapDispatchToProps = (dispatch) => ({
+    sendCode: (username) => {
+        dispatch(userActions.requestCode(username));
+    },
+    reset: (email, code, newPass) => {
+        dispatch(userActions.resetPassword(email, code, newPass))
+    },
+    login: (email, pass) => {
+        dispatch(userActions.login(email, pass));
+    },
+    forgotPassword: () => {
+        dispatch(userActions.forgotPass())
+    },
+    cancel: () => {
+        dispatch(userActions.cancel())
+    },
+    alert: (msg) => {
+        dispatch(alertActions.error(msg))
+    }
+})
+
+const connectedLoginPage = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(LoginPage));
 export { connectedLoginPage as LoginPage }; 

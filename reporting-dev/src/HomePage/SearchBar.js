@@ -14,7 +14,7 @@ import { InputBase } from '@material-ui/core';
 
 const BootstrapInput = withStyles(theme => ({
   input: {
-    fontWeight: 'bold',
+    fontWeight: 500,
     color: 'white',
     fontSize: '22px'
   }
@@ -44,7 +44,7 @@ class SimpleSelect extends React.Component {
   };
 
   handleChange = event => {
-    this.props.setCommunity(this.props.communities.find(c => c.name === event.target.value).id)
+    this.props.setCommunity(this.props.communities.filter(c => c.name === event.target.value)[0].id)
     this.setState({ 
       community: event.target.value 
     });
@@ -52,7 +52,6 @@ class SimpleSelect extends React.Component {
 
   render() {
     const { classes, communities } = this.props;
-    console.log(this.state)
 
     return (
       <form className={classes.root} autoComplete="off">

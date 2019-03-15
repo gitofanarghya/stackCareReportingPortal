@@ -26,12 +26,12 @@ class CommunityUnits extends React.Component {
   
       return (
         <Fragment>
-        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: 'bold'}}>
+        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: '500'}}>
             Community/Units
         </Typography>  
         <List dense style={{fontSize: 14, color: '#404040', height: 'calc(100% - 35px)', overflow: 'auto'}}>
-            <ListItem onClick={(event) => this.handleListItemClick(event, 'community')} button style={this.state.selectedIndex === 'community' ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }>
-                <ListItemText primary={communities.find(c => c.id === selectedCommunity).name} />
+            <ListItem onClick={(event) => this.handleListItemClick(event, 'community')} button style={this.state.selectedIndex === 'community' ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px', fontSize: 14, color: 'white', fontWeight: '400'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px', fontSize: 14, color: '#404040', fontWeight: '400'} }>
+                <ListItemText disableTypography primary={communities.filter(c => c.id === selectedCommunity)[0].name} />
             </ListItem>
             {
                 sortedUnits.map(u => 
@@ -39,9 +39,9 @@ class CommunityUnits extends React.Component {
                       key={u.id}
                       onClick={(event) => this.handleListItemClick(event, u.id)}
                       button
-                      style={this.state.selectedIndex === u.id ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }
+                      style={this.state.selectedIndex === u.id ? {backgroundColor: '#1ADCFF', borderBottom: '0.1px solid', height: '35px', fontSize: 14, color: 'white', fontWeight: '400'} : {backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px', fontSize: 14, color: '#404040', fontWeight: '400'} }
                     >
-                        <ListItemText primary={u.name} />
+                        <ListItemText disableTypography primary={u.name} />
                     </ListItem>
                 )
             }   
