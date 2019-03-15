@@ -1,8 +1,4 @@
-import {history} from './history'
-const REFRESH_REQUEST = 'USERS_REFRESH_REQUEST'
-const REFRESH_SUCCESS = 'USERS_REFRESH_SUCCESS'
-const REFRESH_FAILURE = 'USERS_REFRESH_FAILURE'
-const INVALID_ACCESS_TOKEN = 'INVALID_ACCESS_TOKEN'
+import { userActions, alertActions } from '../_actions';
 
 const requestOptions = {
     method: "POST",
@@ -19,22 +15,11 @@ const requestOptions = {
     })
 };
 
+let refreshing = false
+
 const checkTokenExpirationMiddleware = store => next => action => {
-    if(action.type === INVALID_ACCESS_TOKEN) {
-        store.dispatch(request())
-        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
-            .then(response => response.json())
-            .then(user => {
-                if (user.access_token) {
-                    localStorage.setItem('user', JSON.stringify(user));
-                    store.dispatch(success(user))
-                }
-            },
-            error => {
-                store.dispatch(failure(error.toString()));
-            })
-    } else if(action.type === (REFRESH_REQUEST || REFRESH_SUCCESS || REFRESH_FAILURE)) {
-        next(action)
+    if(refreshing) {
+        return
     } else {
         const token_expiration =
         JSON.parse(localStorage.getItem("user")) &&
@@ -46,17 +31,28 @@ const checkTokenExpirationMiddleware = store => next => action => {
         const r = new Date(refresh_expiration + 'Z')
         const now = new Date()
         if (a < now && now < r) {
-            store.dispatch({ type: INVALID_ACCESS_TOKEN })
-        } else if(r < now) {
+            refreshing = true
             localStorage.removeItem('user')
+            fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+                .then(response => response.json().then(data => {
+                        if(!response.ok) {
+                            store.dispatch(userActions.logout());
+                        } else {
+                            localStorage.setItem('user', JSON.stringify(data));
+                            refreshing = false
+                            store.dispatch({type: 'REFRESHED'})
+                            store.dispatch(userActions.getCommunities())
+                            store.dispatch(userActions.getUserDetails())
+                            store.dispatch(alertActions.success('session refreshed'))
+                        }    
+                    })
+                )
+        } else if(r < now) {
+            store.dispatch(userActions.logout())
         } else {
             return next(action)
-        }
+        }    
     }
-};
-
-function request() { return { type: REFRESH_REQUEST } }
-function success(user) { return { type: REFRESH_SUCCESS, user } }
-function failure(error) { return { type: REFRESH_FAILURE, error } }
+}
 
 export { checkTokenExpirationMiddleware as TokenMiddleware }

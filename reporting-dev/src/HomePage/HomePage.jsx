@@ -11,6 +11,7 @@ import { ReportType } from './ReportType'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { CommunityUnits } from './CommunityUnits';
 import { Reports } from './Reports';
+import { Support } from './Support';
 
 
 class HomePage extends React.Component {
@@ -48,7 +49,11 @@ class HomePage extends React.Component {
                                         </Fragment>
                             }
                         </Grid>
-                    : <div></div> 
+                    : currentPage === 3 ?
+                        <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
+                            <Grid item style={{ height: '100%', padding: '20px' }}><Support /></Grid>
+                        </Grid>
+                    : <div></div>
                 }    
             </NavBar>
         )

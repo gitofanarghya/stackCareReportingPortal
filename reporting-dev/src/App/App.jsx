@@ -40,10 +40,11 @@ class App extends React.Component {
         return ( 
             <Router history={history}>
                 <div className="h-100" >
-                <Switch>
+                {/*<Switch>
                     <Route exact path="/login" component={LoginPage} />
-                    <PrivateRoute exact path="/" component={HomePage} refreshed={this.props.refreshed} />
-                </Switch>
+                    <PrivateRoute exact path="/" component={HomePage} />
+                </Switch>*/}
+                {this.props.loggedIn ? <HomePage /> : <LoginPage />}
                 <Snackbar
                     key={Date.now()}
                     anchorOrigin={{
@@ -75,10 +76,9 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { refreshed, loggedIn } = state.user;
+    const { loggedIn } = state.user;
     const { message } = state.alert
     return {
-        refreshed,
         loggedIn,
         message
     };

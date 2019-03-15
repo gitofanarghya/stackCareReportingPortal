@@ -21,20 +21,6 @@ const BootstrapInput = withStyles(theme => ({
 
 class Reports extends React.Component {
 
-    state = {
-        period: 90
-    }
-
-    
-    showFile(blob) {
-        const file = new Blob(
-                [blob], 
-                {type: 'application/pdf'}
-            )
-        const fileURL = URL.createObjectURL(file)
-        window.open(fileURL);
-    }
-
     view = (r) => {
         const requestOptions = {
             method: "GET",
@@ -46,18 +32,60 @@ class Reports extends React.Component {
         };
         fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
         .then(r => r.blob())
-        .then(this.showFile)
+        .then(blob => {
+            const file = new Blob(
+                    [blob], 
+                    {type: 'application/pdf'}
+                )
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(file, r.filename + '.pdf')
+                return;
+            }
+            const fileURL = URL.createObjectURL(file)
+            window.open(fileURL);
+        })
     }
 
     download = (r) => {
-        this.props.download(r.id, r.community_id, r.filename)
-    }
-
-    handleChange = (event) => {
-        this.setState({
-            period: event.target.value
+        const requestOptions = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "omit",
+            headers: authHeader(),
+            body: null
+        };
+        fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+        .then(r => r.blob())
+        .then(blob => {
+            const file = new Blob(
+                    [blob], 
+                    {type: 'application/pdf'}
+                )
+            if (window.navigator && window.navigator.msSaveBlob) {
+                window.navigator.msSaveBlob(file, r.filename + '.pdf')
+                return;
+            }
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            const url = URL.createObjectURL(file)
+            a.href = url;
+            a.download = r.filename + '.pdf';
+            a.click();
+            window.URL.revokeObjectURL(url);
         })
     }
+
+    handleFilter1 = (event) => {
+        this.props.setFilter1(event.target.value)
+    }
+
+    handleFilter2 = (event) => {
+        this.props.setFilter2(event.target.value)
+    }
+    
+
 
     date_diff_indays = (date1, date2) => {
         var dt1 = new Date(date1);
@@ -81,25 +109,41 @@ class Reports extends React.Component {
     periodFormatter = (period) => period === 'weekly' ? 'Weekly' : 'Monthly'
     
     render() {
-      const { communityUnitFilter, reports, selectedCommunity } = this.props;
+      const { communityUnitFilter, reports, selectedCommunity, filter1, filter2, selectedReportType, reportTypes } = this.props;
 
-      const filteredReports =  communityUnitFilter === 'community' ? 
-                                reports.community[selectedCommunity] && reports.community[selectedCommunity].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period) :
-                                reports.unit[communityUnitFilter] && reports.unit[communityUnitFilter].filter(r => this.date_diff_indays(r.start_date, new Date()) < this.state.period)
-                         
+      const filtered1Reports = communityUnitFilter === 'community' ? 
+                reports.community[selectedCommunity] && reports.community[selectedCommunity].filter(r => this.date_diff_indays(r.start_date, new Date()) < filter2) :
+                reports.unit[communityUnitFilter] && reports.unit[communityUnitFilter].filter(r => this.date_diff_indays(r.start_date, new Date()) < filter2)
+      const filtered2Reports = filtered1Reports !== undefined && filter1 !== 'All reports' ? filtered1Reports.filter(r => r.period === filter1) : filtered1Reports      
       return (
-        filteredReports === undefined ? <NoReports /> :  
+        filtered2Reports === undefined ? <NoReports /> :  
         <Fragment>
         <div style={{display: 'flex'}}>
-        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: 'bold'}}>
+        <Typography style={{fontSize: 13, color: '#707070', height: '35px', fontWeight: '500'}}>
             Report Name
-        </Typography>  
-        <FormControl style={{ marginLeft: 'auto', height: '25px', width: '135px', fontSize: 13 }}>
+        </Typography>
+        <div style={{marginLeft: 'auto'}}>
+        {reportTypes.filter(rt => rt.report_type === selectedReportType)[0].periods.length > 1 ?   
+        <FormControl style={{ marginRight: '5px', height: '25px', width: '135px', fontSize: 13 }}>
                 <Select
                     native
-                    value={this.state.period}
-                    onChange={this.handleChange}
-                    input={<BootstrapInput name="periodFilter" id="filter-period"/>}
+                    value={this.props.filter1}
+                    onChange={this.handleFilter1}
+                    input={<BootstrapInput name="filter1" id="filter1"/>}
+                >   
+                    <option value={'All reports'}>All reports</option>
+                    {reportTypes.filter(rt => rt.report_type === selectedReportType)[0].periods.map(t => 
+                        <option value={t}>{t} only</option>    
+                    )}
+                </Select>
+        </FormControl> : null
+        }
+        <FormControl style={{ marginLeft: '5px', height: '25px', width: '135px', fontSize: 13 }}>
+                <Select
+                    native
+                    value={this.props.filter2}
+                    onChange={this.handleFilter2}
+                    input={<BootstrapInput name="filter2" id="filter2"/>}
                 >
                     <option value={30}>Last 1 month</option>
                     <option value={90}>Last 3 months</option>
@@ -108,11 +152,12 @@ class Reports extends React.Component {
                 </Select>
         </FormControl>
         </div>
+        </div>
         <List dense style={{fontSize: 14, color: '#404040', height: 'calc(100% - 35px)', overflow: 'auto'}}>
             {
-                filteredReports.map(r => 
+                filtered2Reports.map(r => 
                     <ListItem
-                      key={r.filename}
+                      key={r.id}
                       onClick={() => this.view(r)}
                       button
                       style={{backgroundColor: 'white', borderBottom: '0.1px solid', height: '35px'} }
@@ -142,17 +187,24 @@ const NoReports = () => <Grid item style={{padding: '50px'}}>
                         </Grid>
   
 function mapStateToProps(state) {
-    const { communityUnitFilter, reports, selectedCommunity } = state.user;
+    const { communityUnitFilter, reports, selectedCommunity, reportTypes, selectedReportType, filter1, filter2 } = state.user;
     return {
         communityUnitFilter,
         reports,
-        selectedCommunity
+        selectedCommunity,
+        reportTypes, 
+        selectedReportType,
+        filter1,
+        filter2
     };
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    download: (reportID, communityID, fileName) => {
-        dispatch(userActions.download(reportID, communityID, fileName))
+    setFilter1: (val) => {
+        dispatch({ type: 'SET_FILTER1', val})
+    },
+    setFilter2: (val) => {
+        dispatch({ type: 'SET_FILTER2', val})
     }
 })
   

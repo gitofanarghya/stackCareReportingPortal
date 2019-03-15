@@ -7,22 +7,19 @@ import Typography from '@material-ui/core/Typography';
 
 
 class UserNameRole extends React.Component {
-    state = {
-      
-    };
-  
-    handleChange = event => {
-      this.setState({ [event.target.name]: event.target.value });
-      this.props.setCommunity(this.props.communities.find(c => c.name === event.target.value).id)
-    };
   
     render() {
       const { classes, firstName, lastName, role } = this.props;
   
       return (
-        <Typography variant="subtitle2" style={{color: 'white', textAlign: 'center'}}>
-            {firstName} {lastName} ({role === 'admin' ? 'Admin' : role === 'caregiver' ? 'Caregiver' : role === 'installer' ? 'Installer' : role})
-        </Typography>  
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+        <span style={{color: 'white', textAlign: 'center', fontWeight: 500, fontSize: 13}}>
+            {firstName} {lastName} &nbsp;
+        </span>  
+        <span style={{color: 'rgba(255, 255, 255, 0.5)', textAlign: 'center', fontWeight: 400, fontSize: 13}}>
+          ({role === 'admin' ? 'Administrator' : role === 'caregiver' ? 'Caregiver' : role === 'installer' ? 'Installer' : role})
+        </span>
+        </div>  
         )
     }
 }
