@@ -22,28 +22,51 @@ const BootstrapInput = withStyles(theme => ({
 class Reports extends React.Component {
 
     view = (r) => {
-        const requestOptions = {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "omit",
-            headers: authHeader(),
-            body: null
-        };
-        fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
-        .then(r => r.blob())
-        .then(blob => {
-            const file = new Blob(
-                    [blob], 
-                    {type: 'application/pdf'}
-                )
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            const requestOptions = {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "omit",
+                headers: authHeader(),
+                body: null
+            };
+            fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+            .then(r => r.blob())
+            .then(blob => {
+                const file = new Blob(
+                        [blob], 
+                        {type: 'application/pdf'}
+                    )
                 window.navigator.msSaveOrOpenBlob(file, r.filename + '.pdf')
-                return;
-            }
-            const fileURL = URL.createObjectURL(file)
-            window.open(fileURL);
-        })
+            })
+            
+        } else {
+            const tab = window.open('', '_blank')
+            tab.document.write('Loading report...');
+
+            const requestOptions = {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "omit",
+                headers: authHeader(),
+                body: null
+            };
+            fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+            .then(r => r.blob())
+            .then(blob => {
+                const file = new Blob(
+                        [blob], 
+                        {type: 'application/pdf'}
+                    )
+                const fileURL = URL.createObjectURL(file)
+                tab.location.href = fileURL
+            })
+        }
+
+        
     }
 
     download = (r) => {
@@ -133,7 +156,7 @@ class Reports extends React.Component {
                 >   
                     <option value={'All reports'}>All reports</option>
                     {reportTypes.filter(rt => rt.report_type === selectedReportType)[0].periods.map(t => 
-                        <option value={t}>{t} only</option>    
+                        <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)} only</option>    
                     )}
                 </Select>
         </FormControl> : null

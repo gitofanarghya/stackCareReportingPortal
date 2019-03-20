@@ -6,11 +6,11 @@ const requestOptions = {
     cache: "no-cache",
     credentials: "omit",
     headers: {
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json"
     },
     body: JSON.stringify({
         "grant_type": "refresh_token",
-        "refresh_token": localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).refresh_token : null,
+        "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
         "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
     })
 };
@@ -32,7 +32,6 @@ const checkTokenExpirationMiddleware = store => next => action => {
         const now = new Date()
         if (a < now && now < r) {
             refreshing = true
-            localStorage.removeItem('user')
             fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
                 .then(response => response.json().then(data => {
                         if(!response.ok) {
