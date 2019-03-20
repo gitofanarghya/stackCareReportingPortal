@@ -60,6 +60,13 @@ class LoginPage extends React.Component {
 
     cancel = (e) => {
         this.props.cancel()
+        this.setState({
+            username: '',
+            password: '',
+            code: '',
+            newPass: '',
+            confirmPass: ''
+        })
     }
 
     sendCode = (e) => {
@@ -111,7 +118,7 @@ class LoginPage extends React.Component {
                     className={classes.media}
                     image="/img/logo.png"
                 />
-                <CardContent>
+                <CardContent style={forgotPass ? null : {paddingBottom: 0}}>
                     {
                     forgotPass ? 
                     sentCode ? 
@@ -152,7 +159,7 @@ class LoginPage extends React.Component {
                             type='password'
                         />
                         <br />
-                        <Button variant='contained' onClick={() => this.reset()} style={{marginTop: 8}}>RESET</Button>
+                        <Button disabled={this.state.code === '' || this.state.newPass === '' || this.state.confirmPass === ''} variant='contained' onClick={() => this.reset()} style={{marginTop: 8}}>RESET</Button>
                         <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.cancel()} style={{ fontSize: 14, color: '#707070', textTransform: 'capitalize', padding: '0px', marginTop: 8}}>Cancel</Button>
                     </form> : 
                     <form noValidate autoComplete="off">
@@ -169,7 +176,7 @@ class LoginPage extends React.Component {
                             value={this.state.username}
                         />
                         <br />
-                        <Button variant='contained' onClick={() => this.sendCode()} style={{marginTop: 8}}>SEND CODE</Button>
+                        <Button disabled={this.state.username === ''} variant='contained' onClick={() => this.sendCode()} style={{marginTop: 8}}>SEND CODE</Button>
                         <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.cancel()} style={{ fontSize: 14, color: '#707070', textTransform: 'capitalize', padding: '0px', marginTop: 8}}>Cancel</Button>
                     </form>  : 
                     <form noValidate autoComplete="off">
@@ -198,7 +205,7 @@ class LoginPage extends React.Component {
                         />
                         <br />
                         <Button variant='contained' onClick={() => this.handleSubmit()} style={{marginTop: 8}}>Login</Button>
-                        <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.forgotPassword()} style={{ fontSize: 13, color: '#707070', display: 'flex', textTransform: 'capitalize', padding: '0px', lineHeight: 3 }}>Forgot password?</Button>
+                        <Button className={classes.forgot} disableFocusRipple disableTouchRipple onClick={() => this.forgotPassword()} style={{ marginTop: 8, fontSize: 13, color: '#707070', display: 'flex', textTransform: 'capitalize', padding: '0px'}}>Forgot password?</Button>
                         
                     </form>
                     }

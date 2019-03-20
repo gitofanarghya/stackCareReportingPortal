@@ -59,20 +59,18 @@ class MenuList extends React.Component {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+              <DialogTitle id="alert-dialog-title" style={{textAlign: 'center'}}>Log out</DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to log out?
+                <DialogContentText id="alert-dialog-description" style={{textAlign: 'center'}}>
+                  Are you sure you want to log out of your account?
                 </DialogContentText>
               </DialogContent>
-              <DialogActions>
-                <Button onClick={() => logout()} color="primary">
-                  Yes
+                <Button variant='contained' onClick={() => logout()} style={{ margin: 'auto', width: '70%', marginBottom: '10px', backgroundColor: '#EC655F', color: 'white' }}>
+                  Log out
                 </Button>
-                <Button onClick={this.handleClose} color="primary" autoFocus>
-                  No
+                <Button variant='contained'  onClick={this.handleClose} style={{ margin: 'auto', width: '70%', marginBottom: '20px', backgroundColor: '#BDC5CB', color: 'white' }}>
+                  Cancel
                 </Button>
-              </DialogActions>
             </Dialog>
         </List> 
         )

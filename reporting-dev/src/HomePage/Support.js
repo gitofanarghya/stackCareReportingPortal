@@ -12,7 +12,7 @@ export class Support extends React.Component {
             Support
         </Typography>  
         <Typography style={{fontSize: 14, height: '35px', fontWeight: '400'}}>
-            Questions? We're here to help. Contact us at <a href="mailto:support@stack.care" target="_top">support@stack.care</a>
+            Questions? We're here to help. Contact us at <a href="mailto:support@stack.care" target="_top">support@stack.care</a>.
         </Typography>  
         
         </Fragment>
