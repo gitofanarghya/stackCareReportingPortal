@@ -5,6 +5,8 @@ let refreshing = false
 const checkTokenExpirationMiddleware = store => next => action => {
     if(refreshing) {
         return
+    } else if(action.type === 'SET_COMMUNITY_UNIT_FILTER') {
+        next(action)
     } else {
         
         const token_expiration =
