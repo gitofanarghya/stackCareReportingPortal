@@ -1,16 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import FilledInput from '@material-ui/core/FilledInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { userActions } from '../_actions';
 import { InputBase } from '@material-ui/core';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+const theme1 = createMuiTheme({
+  overrides: {
+    MuiSelect: {
+      select: {
+        "&:focus": {
+          background: "transparent"
+        }
+      }
+    }
+  }
+});
 
 const BootstrapInput = withStyles(theme => ({
   input: {
@@ -56,6 +65,7 @@ class SimpleSelect extends React.Component {
     return (
       <form className={classes.root} autoComplete="off">
         <FormControl variant="standard" className={classes.formControl}>
+        <MuiThemeProvider theme={theme1}>
           <Select
             value={this.state.community}
             onChange={this.handleChange}
@@ -70,6 +80,7 @@ class SimpleSelect extends React.Component {
               )
             })}
           </Select>
+        </MuiThemeProvider>
         </FormControl>
       </form>
     );

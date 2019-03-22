@@ -154,9 +154,9 @@ class Reports extends React.Component {
                     onChange={this.handleFilter1}
                     input={<BootstrapInput name="filter1" id="filter1"/>}
                 >   
-                    <option value={'All reports'}>All reports</option>
+                    <option value={'All reports'}>All Reports</option>
                     {reportTypes.filter(rt => rt.report_type === selectedReportType)[0].periods.map(t => 
-                        <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)} only</option>    
+                        <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)} Only</option>    
                     )}
                 </Select>
         </FormControl> : null
@@ -168,10 +168,10 @@ class Reports extends React.Component {
                     onChange={this.handleFilter2}
                     input={<BootstrapInput name="filter2" id="filter2"/>}
                 >
-                    <option value={30}>Last 1 month</option>
-                    <option value={90}>Last 3 months</option>
-                    <option value={180}>Last 6 months</option>
-                    <option value={365}>Last 12 months</option>
+                    <option value={30}>Last 1 Month</option>
+                    <option value={90}>Last 3 Months</option>
+                    <option value={180}>Last 6 Months</option>
+                    <option value={365}>Last 12 Months</option>
                 </Select>
         </FormControl>
         </div>
