@@ -40,9 +40,9 @@ const checkTokenExpirationMiddleware = store => next => action => {
                             store.dispatch(userActions.logout());
                         } else {
                             localStorage.setItem('user', JSON.stringify(data));
+                            store.dispatch({ type: 'REFRESHED', data })
                             refreshing = false
-                            window.location.reload(true)
-                            store.dispatch(alertActions.success('session refreshing'))
+                            store.dispatch(alertActions.success('session refreshed'))
                         }    
                     })
                 )

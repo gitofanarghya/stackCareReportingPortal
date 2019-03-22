@@ -110,27 +110,7 @@ export function user(state, action) {
     case 'REFRESHED':
       return {
         ...state,
-        loggedIn: true,
-        user: action.user,
-        refreshed: true,
-        refreshing: false,
-        communities: null,
-        units: null,
-        userDetails: null,
-        userReady: false,
-        selectedCommunity: null,
-        currentPage: 1,
-        reportTypes: null,
-        selectedReportType: null,
-        reports: null,
-        communityUnitFilter: null,
-        role: null,
-        resetPass: {
-          forgotPass: false,
-          sentCode: false
-        },
-        filter1: 'All reports',
-        filter2: 90
+        user: action.data
       };
     case userConstants.LOGOUT:
       return {
