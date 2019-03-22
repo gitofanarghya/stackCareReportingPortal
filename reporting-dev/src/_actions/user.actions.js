@@ -69,8 +69,7 @@ function login(username, password) {
         userService.login(username, password)
             .then(
                 user => { 
-                    dispatch(success(user));
-                    history.push('/')
+                    dispatch(success(user))
                 },
                 error => {
                     dispatch(failure(error.toString()));
@@ -85,8 +84,10 @@ function login(username, password) {
 }
 
 function logout() {
-    userService.logout();
-    return { type: userConstants.LOGOUT }
+    return dispatch => {
+        userService.logout();
+        dispatch({ type: userConstants.LOGOUT })
+    }
 }
 
 function getCommunities() {

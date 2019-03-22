@@ -1,26 +1,12 @@
 import { userActions, alertActions } from '../_actions';
 
-const requestOptions = {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "omit",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        "grant_type": "refresh_token",
-        "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
-        "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
-    })
-};
-
 let refreshing = false
 
 const checkTokenExpirationMiddleware = store => next => action => {
     if(refreshing) {
         return
     } else {
+        
         const token_expiration =
         JSON.parse(localStorage.getItem("user")) &&
         JSON.parse(localStorage.getItem("user"))["access_expiration"];
@@ -32,6 +18,22 @@ const checkTokenExpirationMiddleware = store => next => action => {
         const now = new Date()
         if (a < now && now < r) {
             refreshing = true
+            
+            const requestOptions = {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "omit",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "grant_type": "refresh_token",
+                    "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
+                    "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
+                })
+            };
+
             fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
                 .then(response => response.json().then(data => {
                         if(!response.ok) {
@@ -39,10 +41,8 @@ const checkTokenExpirationMiddleware = store => next => action => {
                         } else {
                             localStorage.setItem('user', JSON.stringify(data));
                             refreshing = false
-                            store.dispatch({type: 'REFRESHED'})
-                            store.dispatch(userActions.getCommunities())
-                            store.dispatch(userActions.getUserDetails())
-                            store.dispatch(alertActions.success('session refreshed'))
+                            window.location.reload(true)
+                            store.dispatch(alertActions.success('session refreshing'))
                         }    
                     })
                 )
