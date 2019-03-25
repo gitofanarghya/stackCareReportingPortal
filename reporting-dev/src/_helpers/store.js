@@ -11,6 +11,6 @@ export const store = createStore(
     applyMiddleware(
         thunkMiddleware,
         loggerMiddleware,
-        TokenMiddleware
+        //TokenMiddleware
     )
 );

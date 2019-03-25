@@ -15,10 +15,23 @@ import { Support } from './Support';
 
 
 class HomePage extends React.Component {
-    
 
-    componentDidMount() {
+    state = {
+        timer: null
+    };
+    
+    componentDidMount = () => {
         this.props.init()
+        let timer = setInterval(this.refresh, 3000000);
+        this.setState({timer});
+    }
+    
+    componentWillUnmount = () => {
+        this.clearInterval(this.state.timer);
+    }
+
+    refresh = () => {
+        this.props.refresh()
     }
 
     render() {
@@ -88,6 +101,33 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(userActions.getCommunities())
         dispatch(userActions.getUserDetails())
     },
+    refresh: () => {
+        const requestOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "omit",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "grant_type": "refresh_token",
+                "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
+                "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
+            })
+        };
+
+        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+            .then(response => response.json().then(data => {
+                    if(!response.ok) {
+                        dispatch(userActions.logout());
+                    } else {
+                        localStorage.setItem('user', JSON.stringify(data));
+                        dispatch({ type: 'REFRESHED', data })
+                    }    
+                })
+            )
+    }
 })
 
 const connectedHomePage = connect(mapStateToProps, mapDispatchToProps)(HomePage);
