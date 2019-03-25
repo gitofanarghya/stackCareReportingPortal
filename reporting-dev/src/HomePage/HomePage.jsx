@@ -15,23 +15,17 @@ import { Support } from './Support';
 
 
 class HomePage extends React.Component {
-
-    state = {
-        timer: null
-    };
     
     componentDidMount = () => {
         this.props.init()
-        let timer = setInterval(this.refresh, 3000000);
-        this.setState({timer});
-    }
-    
-    componentWillUnmount = () => {
-        this.clearInterval(this.state.timer);
+        setTimeout(this.refresh, 3000000)
     }
 
-    refresh = () => {
+    refresh = (continueInterval = true) => {
         this.props.refresh()
+        if(continueInterval) {
+            setTimeout(this.refresh, 3000000)
+        }
     }
 
     render() {
