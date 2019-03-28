@@ -41,10 +41,10 @@ class MenuList extends React.Component {
               <ListItemIcon style={{color: 'inherit'}}><ListIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Reports'/>
             </ListItem> }
-            {/*<ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF', fontWeight: 500, fontSize: 14} : {fontWeight: 500, fontSize: 14}}>
+            <ListItem button onClick={() => setPage(2)} style={currentPage === 2 ? {color: '#1ADCFF', fontWeight: 500, fontSize: 14} : {fontWeight: 500, fontSize: 14}}>
               <ListItemIcon style={{color: 'inherit'}}><SettingsIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Settings' />
-              </ListItem>*/}
+              </ListItem>
             <ListItem button onClick={() => setPage(3)} style={currentPage === 3 ? {color: '#1ADCFF', fontWeight: 500, fontSize: 14} : {fontWeight: 500, fontSize: 14}}>
               <ListItemIcon style={{color: 'inherit'}}><ContactPhoneIcon /></ListItemIcon>
               <ListItemText disableTypography style={{color: 'inherit'}} primary='Support' />

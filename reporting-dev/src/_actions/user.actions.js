@@ -1,7 +1,7 @@
 import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from '.';
-import { history } from '../_helpers';
+import { store } from '../_helpers'
 
 export const userActions = {
     login,
@@ -17,8 +17,36 @@ export const userActions = {
     requestCode,
     resetPassword,
     cancel,
-    forgotPass
+    forgotPass,
+    setSettingType,
+    saveUserDetails,
+    savePass
 };
+
+function savePass(oldPass, newPass) {
+    return dispatch => {
+        userService.savePass(store.getState().user.userDetails.email, oldPass, newPass)
+            .then(data => {
+                localStorage.setItem('user', JSON.stringify(data))
+                dispatch({type: 'SAVEPASS', data})
+                dispatch(alertActions.success('password updated!'))
+            }, error => {
+                dispatch(alertActions.error(error))
+            })
+    }
+}
+
+function saveUserDetails(firstname, lastname) {
+    return dispatch => {
+        userService.saveUserDetails(firstname, lastname, store.getState().user.userDetails.id)
+            .then(data => {
+                dispatch(getUserDetails())
+                dispatch(alertActions.success('user details updated!'))
+            }, error => {
+                dispatch(alertActions.error(error))
+            })
+    }
+}
 
 function cancel() {
     return dispatch => {
@@ -223,4 +251,12 @@ function setCommunityUnitFilter(key) {
     }
 
     function request(key) { return { type: userConstants.SET_COMMUNITY_UNIT_FILTER, key } }
+}
+
+function setSettingType(settingType) {
+    return dispatch => {
+        dispatch(request(settingType))
+    }
+
+    function request(settingType) { return { type: userConstants.SET_SETTING_TYPE, settingType } }
 }

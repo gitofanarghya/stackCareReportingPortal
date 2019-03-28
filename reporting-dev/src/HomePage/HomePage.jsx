@@ -12,6 +12,13 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { CommunityUnits } from './CommunityUnits';
 import { Reports } from './Reports';
 import { Support } from './Support';
+import { Settings } from './Settings';
+import { CommunityInfo } from './CommunityInfo';
+import { StaffGroups } from './StaffGroups';
+import { Staff } from './Staff';
+import { ScheduledReports } from './ScheduledReports';
+import { AccountInfo } from './AccountInfo';
+
 
 
 class HomePage extends React.Component {
@@ -29,7 +36,7 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage } = this.props
+        const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage, selectedSettingType } = this.props
         
         return( userReady === false ? <Loading /> :
             <NavBar>
@@ -56,6 +63,40 @@ class HomePage extends React.Component {
                                         </Fragment>
                             }
                         </Grid>
+                    : currentPage === 2 ?
+                        <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
+                            <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}>
+                                <Settings />
+                            </Grid>
+                                {
+                                    selectedSettingType === 'Account Info' ?
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px'}}>
+                                        <AccountInfo />
+                                    </Grid> 
+                                    :
+                                    selectedSettingType === 'Scheduled Reports' ?
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}>
+                                        <ScheduledReports />
+                                    </Grid>
+                                    :
+                                    selectedSettingType === 'Community Info' ?
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}>
+                                        <CommunityInfo />
+                                    </Grid>
+                                    :
+                                    selectedSettingType === 'Staff' ?
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}>
+                                        <Staff />
+                                    </Grid>
+                                    :
+                                    selectedSettingType === 'Staff Groups' ?
+                                    <Grid item style={{width: '225px', height: '100%', padding: '20px', borderRight: '0.1px solid'}}>
+                                        <StaffGroups />
+                                    </Grid>
+                                    :
+                                    null
+                                }
+                        </Grid>
                     : currentPage === 3 ?
                         <Grid container direction='row' justify='flex-start' style={{height:'calc(100% - 100px', flexWrap: 'nowrap'}}>
                             <Grid item style={{ height: '100%', padding: '20px' }}><Support /></Grid>
@@ -78,7 +119,7 @@ const Placeholder = () => <Grid item style={{padding: '50px', display: 'inline-f
 
 
 function mapStateToProps(state) {
-    const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage } = state.user;
+    const { userReady, selectedReportType, reports, reportTypes, communityUnitFilter, currentPage, selectedSettingType } = state.user;
     
     return {
         userReady,
@@ -86,14 +127,40 @@ function mapStateToProps(state) {
         reports,
         reportTypes,
         communityUnitFilter,
-        currentPage
+        currentPage,
+        selectedSettingType
     };
 }
 
 const mapDispatchToProps = (dispatch) => ({
     init: () => {
-        dispatch(userActions.getCommunities())
-        dispatch(userActions.getUserDetails())
+        const requestOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "omit",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "grant_type": "refresh_token",
+                "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
+                "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
+            })
+        };
+
+        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+            .then(response => response.json().then(data => {
+                    if(!response.ok) {
+                        dispatch(userActions.logout());
+                    } else {
+                        localStorage.setItem('user', JSON.stringify(data));
+                        dispatch({ type: 'REFRESHED', data })
+                        dispatch(userActions.getCommunities())
+                        dispatch(userActions.getUserDetails())
+                    }    
+                })
+            )
     },
     refresh: () => {
         const requestOptions = {

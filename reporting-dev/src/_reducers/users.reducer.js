@@ -23,7 +23,8 @@ const initialState = user ? {
     sentCode: false
   },
   filter1: 'All reports',
-  filter2: 90
+  filter2: 90,
+  selectedSettingType: null
 } 
 : {
   loggedIn: false, 
@@ -46,7 +47,8 @@ const initialState = user ? {
     sentCode: false
   },
   filter1: 'All reports',
-  filter2: 90
+  filter2: 90,
+  selectedSettingType: null
 };
 
 export function user(state, action) {
@@ -77,7 +79,8 @@ export function user(state, action) {
           sentCode: false
         },
         filter1: 'All reports',
-        filter2: 90
+        filter2: 90,
+        selectedSettingType: null
       };
     case userConstants.LOGIN_SUCCESS:
       return {
@@ -103,8 +106,14 @@ export function user(state, action) {
           sentCode: false
         },
         filter1: 'All reports',
-        filter2: 90
+        filter2: 90,
+        selectedSettingType: null
       };
+    case 'SAVEPASS':
+      return {
+        ...state,
+        user: action.data
+      }  
     case userConstants.LOGIN_FAILURE:
       return initialState
     case 'REFRESHED':
@@ -134,7 +143,8 @@ export function user(state, action) {
           sentCode: false
         },
         filter1: 'All reports',
-        filter2: 90
+        filter2: 90,
+        selectedSettingType: null
       }
     case userConstants.GET_COMMUNITIES_REQUEST:
       return {
@@ -274,6 +284,11 @@ export function user(state, action) {
       }
     case userConstants.RESET_PASSWORD_FAILURE:
       return state
+    case userConstants.SET_SETTING_TYPE:
+      return {
+        ...state,
+        selectedSettingType: action.settingType
+      }
     default:
       return state
   }

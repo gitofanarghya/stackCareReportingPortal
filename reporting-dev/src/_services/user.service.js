@@ -10,8 +10,56 @@ export const userService = {
     getReportTypes,
     getReports,
     requestCode,
-    resetPassword
+    resetPassword,
+    saveUserDetails,
+    savePass
 };
+
+
+function savePass(email, oldPass, newPass) {
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "omit",
+        headers: authHeader(),
+        body: JSON.stringify({
+            "email": email,
+            "old_password": oldPass,
+            "new_password": newPass
+        })
+    };
+
+    return fetch(`https://care-api-staging.appspot.com/login/password/change`, requestOptions)
+        .then(response => {
+            return response.json().then(data => {
+                if(!response.ok) {
+                    const error = data.error.message
+                    return Promise.reject(error);
+                } else {
+                    return data     
+                }    
+            })
+        })
+
+}
+
+function saveUserDetails(firstname, lastname, id) {
+    const requestOptions = {
+        method: "PUT",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "omit",
+        headers: authHeader(),
+        body: JSON.stringify({
+            first_name: firstname,
+            last_name: lastname
+        })
+    };
+
+    return fetch(`https://care-api-staging.appspot.com/users?user_id=${id}`, requestOptions)
+        .then(handleResponse)
+}
 
 function requestCode(email) {
     const requestOptions = {
