@@ -92,8 +92,33 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => ({
     init: () => {
-        dispatch(userActions.getCommunities())
-        dispatch(userActions.getUserDetails())
+        const requestOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "omit",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "grant_type": "refresh_token",
+                "refresh_token": localStorage.getItem('user') === null ? null : JSON.parse(localStorage.getItem('user'))['refresh_token'],
+                "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
+            })
+        };
+
+        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+            .then(response => response.json().then(data => {
+                    if(!response.ok) {
+                        dispatch(userActions.logout());
+                    } else {
+                        localStorage.setItem('user', JSON.stringify(data));
+                        dispatch({ type: 'REFRESHED', data })
+                        dispatch(userActions.getCommunities())
+                        dispatch(userActions.getUserDetails())
+                    }    
+                })
+            )
     },
     refresh: () => {
         const requestOptions = {
