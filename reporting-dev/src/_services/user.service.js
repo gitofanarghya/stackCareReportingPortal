@@ -27,7 +27,7 @@ function requestCode(email) {
         })
     };
 
-    return fetch(`https://care-api-staging.appspot.com/login/password/reset`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/login/password/reset`, requestOptions)
         .then(response => {
             if(!response.ok) {
                 return response.json().then(json => {
@@ -58,7 +58,7 @@ function resetPassword(email, code, newPass) {
         })
     };
 
-    return fetch(`https://care-api-staging.appspot.com/login/password/reset`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/login/password/reset`, requestOptions)
         .then(response => {
             return response.json().then(data => {
                 if(!response.ok) {
@@ -89,7 +89,7 @@ function login(username, password) {
         })
     };
 
-    return fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
         .then(response => {
             return response.json().then(data => {
                 if(!response.ok) {
@@ -120,7 +120,7 @@ function getCommunities() {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/communities`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/communities`, requestOptions)
         .then(handleResponse)
 }
 
@@ -135,7 +135,7 @@ function getUnits(id) {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/units?community_id=${id}`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/units?community_id=${id}`, requestOptions)
         .then(handleResponse)
     
 }
@@ -150,7 +150,7 @@ function getReportTypes(id) {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/report_types`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/report_types`, requestOptions)
         .then(handleResponse)
     
 }
@@ -167,7 +167,7 @@ function getUserDetails() {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/users`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/users`, requestOptions)
         .then(handleResponse)
     
 }
@@ -182,7 +182,7 @@ function getReports(reportType, communityID) {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/reports?community_id=${communityID}&report_type=${reportType}`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/reports?community_id=${communityID}&report_type=${reportType}`, requestOptions)
         .then(handleResponse)
     
 }

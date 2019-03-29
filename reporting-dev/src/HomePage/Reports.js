@@ -31,7 +31,7 @@ class Reports extends React.Component {
                 headers: authHeader(),
                 body: null
             };
-            fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+            fetch(`https://care-api-prod.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
             .then(r => r.blob())
             .then(blob => {
                 const file = new Blob(
@@ -53,7 +53,7 @@ class Reports extends React.Component {
                 headers: authHeader(),
                 body: null
             };
-            fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+            fetch(`https://care-api-prod.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
             .then(r => r.blob())
             .then(blob => {
                 const file = new Blob(
@@ -77,7 +77,7 @@ class Reports extends React.Component {
             headers: authHeader(),
             body: null
         };
-        fetch(`https://care-api-staging.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
+        fetch(`https://care-api-prod.appspot.com/communities/${r.community_id}/reports/${r.id}`, requestOptions)
         .then(r => r.blob())
         .then(blob => {
             const file = new Blob(

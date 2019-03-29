@@ -105,7 +105,7 @@ const mapDispatchToProps = (dispatch) => ({
             })
         };
 
-        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+        fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
             .then(response => response.json().then(data => {
                     if(!response.ok) {
                         dispatch(userActions.logout());
@@ -134,7 +134,7 @@ const mapDispatchToProps = (dispatch) => ({
             })
         };
 
-        fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+        fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
             .then(response => response.json().then(data => {
                     if(!response.ok) {
                         dispatch(userActions.logout());
