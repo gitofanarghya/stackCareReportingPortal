@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Grid, FormControl, Select } from '@material-ui/core';
-import {userActions} from '../_actions'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye'
 import { authHeader } from '../_helpers'
