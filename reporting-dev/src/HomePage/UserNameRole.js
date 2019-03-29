@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
 
 
 

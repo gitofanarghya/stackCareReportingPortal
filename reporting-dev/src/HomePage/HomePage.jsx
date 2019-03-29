@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Loading } from '../_components'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'
-import classNames from 'classnames';
-import { Paper } from '@material-ui/core';
 import { userActions } from '../_actions';
 import { NavBar } from './NavBar'
 import { ReportType } from './ReportType'
